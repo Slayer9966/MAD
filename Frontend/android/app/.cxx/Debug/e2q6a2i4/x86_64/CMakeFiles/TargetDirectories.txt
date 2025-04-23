@@ -1,0 +1,2 @@
+E:/Compete/MAD/Frontend/android/app/.cxx/Debug/e2q6a2i4/x86_64/CMakeFiles/edit_cache.dir
+E:/Compete/MAD/Frontend/android/app/.cxx/Debug/e2q6a2i4/x86_64/CMakeFiles/rebuild_cache.dir

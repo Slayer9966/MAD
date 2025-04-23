@@ -93,10 +93,7 @@ class WelcomeScreen extends StatelessWidget {
                       // Subtitle
                       const Text(
                         "Your journey to better teaching and learning starts here",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white70,
-                        ),
+                        style: TextStyle(fontSize: 16, color: Colors.white70),
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -140,10 +137,7 @@ class WelcomeScreen extends StatelessWidget {
                       const SizedBox(height: 12),
                       const Text(
                         "— William Butler Yeats",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white70,
-                        ),
+                        style: TextStyle(fontSize: 14, color: Colors.white70),
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -169,7 +163,8 @@ class WelcomeScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const LoginScreen()),
+                                builder: (context) => const LoginScreen(),
+                              ),
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -200,13 +195,16 @@ class WelcomeScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const SignupScreen()),
+                                builder: (context) => const SignupScreen(),
+                              ),
                             );
                           },
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.white,
-                            side:
-                                const BorderSide(color: Colors.white, width: 2),
+                            side: const BorderSide(
+                              color: Colors.white,
+                              width: 2,
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),

@@ -1,5 +1,5 @@
-import 'package:dummy/student_dashboard.dart';
-import 'package:dummy/tutor_dashboard.dart';
+import 'student_dashboard.dart';
+import 'tutor_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'signup_screen.dart';
@@ -86,10 +86,7 @@ class _LoginScreenState extends State<LoginScreen>
                     const SizedBox(height: 8),
                     const Text(
                       "Log in to continue your learning journey",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white70,
-                      ),
+                      style: TextStyle(fontSize: 16, color: Colors.white70),
                     ),
                     const SizedBox(height: 40),
 
@@ -99,6 +96,7 @@ class _LoginScreenState extends State<LoginScreen>
                       child: Container(
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
+                          // ignore: deprecated_member_use
                           color: Colors.white.withOpacity(0.9),
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
@@ -122,8 +120,9 @@ class _LoginScreenState extends State<LoginScreen>
                                 if (value == null || value.isEmpty) {
                                   return 'Please enter your email';
                                 }
-                                final emailRegex =
-                                    RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                                final emailRegex = RegExp(
+                                  r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                                );
                                 if (!emailRegex.hasMatch(value)) {
                                   return 'Please enter a valid email';
                                 }
@@ -179,8 +178,9 @@ class _LoginScreenState extends State<LoginScreen>
                                         },
                                         activeColor: const Color(0xFF6C63FF),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -257,7 +257,9 @@ class _LoginScreenState extends State<LoginScreen>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               _buildSocialButton(
-                                  Icons.g_mobiledata, Colors.white),
+                                Icons.g_mobiledata,
+                                Colors.white,
+                              ),
                               const SizedBox(width: 24),
                               _buildSocialButton(Icons.apple, Colors.white),
                               const SizedBox(width: 24),
@@ -286,7 +288,8 @@ class _LoginScreenState extends State<LoginScreen>
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const SignupScreen()),
+                                  builder: (context) => const SignupScreen(),
+                                ),
                               );
                             },
                             child: const Text(
@@ -348,27 +351,24 @@ class _LoginScreenState extends State<LoginScreen>
         shape: BoxShape.circle,
         border: Border.all(color: color.withOpacity(0.5), width: 1),
       ),
-      child: IconButton(
-        icon: Icon(icon, color: color),
-        onPressed: () {},
-      ),
+      child: IconButton(icon: Icon(icon, color: color), onPressed: () {}),
     );
   }
 
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
       // Show loading snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Processing Login...')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Processing Login...')));
 
       // Simulate login delay then navigate to dashboard
-      Future.delayed(const Duration(seconds: 2), () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const StudentDashboard()),
-        );
-      });
+      // Future.delayed(const Duration(seconds: 2), () {
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => const StudentDashboard()),
+      //   );
+      // });
     }
   }
 }
@@ -388,12 +388,24 @@ class BackgroundPainter extends CustomPainter {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        HSVColor.fromAHSV(1.0, (animation.value * 360) % 360, 0.7, 0.9)
-            .toColor(),
-        HSVColor.fromAHSV(1.0, ((animation.value * 360) + 60) % 360, 0.8, 0.8)
-            .toColor(),
-        HSVColor.fromAHSV(1.0, ((animation.value * 360) + 120) % 360, 0.7, 0.9)
-            .toColor(),
+        HSVColor.fromAHSV(
+          1.0,
+          (animation.value * 360) % 360,
+          0.7,
+          0.9,
+        ).toColor(),
+        HSVColor.fromAHSV(
+          1.0,
+          ((animation.value * 360) + 60) % 360,
+          0.8,
+          0.8,
+        ).toColor(),
+        HSVColor.fromAHSV(
+          1.0,
+          ((animation.value * 360) + 120) % 360,
+          0.7,
+          0.9,
+        ).toColor(),
       ],
       stops: const [0.0, 0.5, 1.0],
     );

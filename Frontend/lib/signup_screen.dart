@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -352,17 +354,13 @@ class _SignupScreenState extends State<SignupScreen>
           Expanded(
             child: _buildRoleOption(
               title: "Student",
-              icon: Icons.school,
-              isSelected: _selectedRole == 'Student',
-              onTap: () => setState(() => _selectedRole = 'Student'),
+              value: "Student",
             ),
           ),
           Expanded(
             child: _buildRoleOption(
               title: "Teacher",
-              icon: Icons.cast_for_education,
-              isSelected: _selectedRole == 'Teacher',
-              onTap: () => setState(() => _selectedRole = 'Teacher'),
+              value: "Teacher",
             ),
           ),
         ],
@@ -372,56 +370,68 @@ class _SignupScreenState extends State<SignupScreen>
 
   Widget _buildRoleOption({
     required String title,
-    required IconData icon,
-    required bool isSelected,
-    required VoidCallback onTap,
+    required String value,
   }) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        setState(() {
+          _selectedRole = value;
+        });
+      },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF6C63FF) : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              color: isSelected ? Colors.white : Colors.grey,
-              size: 28,
+        padding: const EdgeInsets.all(16),
+        color: _selectedRole == value
+            ? const Color(0xFF6C63FF)
+            : Colors.transparent,
+        child: Center(
+          child: Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: _selectedRole == value ? Colors.white : Colors.black87,
             ),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: TextStyle(
-                color: isSelected ? Colors.white : Colors.grey,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  void _handleSignup() {
-    if (_formKey.currentState!.validate()) {
-      // Process signup
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Processing Sign Up...')),
+  Future<void> _handleSignup() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    final Map<String, dynamic> signupData = {
+      'first_name': _firstNameController.text,
+      'last_name': _lastNameController.text,
+      'email': _emailController.text,
+      'password': _passwordController.text,
+      'role': _selectedRole,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(
+            'https://your-backend-api.com/signup'), // Replace with your backend URL
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(signupData),
       );
 
-      // Here you would typically call your authentication service
-      // For now, just navigate back after a delay
-      Future.delayed(const Duration(seconds: 2), () {
-        Navigator.pop(context);
-      });
+      if (response.statusCode == 201) {
+        // Handle successful signup
+        print('Signup successful');
+      } else {
+        // Handle error
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
 }
 
-// Custom background painter for animated gradient effect
 class BackgroundPainter extends CustomPainter {
   final Animation<double> animation;
 
@@ -429,46 +439,22 @@ class BackgroundPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final rect = Offset.zero & size;
-
-    // Create gradient with animated colors
-    final gradient = LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        HSVColor.fromAHSV(1.0, (animation.value * 360) % 360, 0.7, 0.9)
-            .toColor(),
-        HSVColor.fromAHSV(1.0, ((animation.value * 360) + 60) % 360, 0.8, 0.8)
-            .toColor(),
-        HSVColor.fromAHSV(1.0, ((animation.value * 360) + 120) % 360, 0.7, 0.9)
-            .toColor(),
-      ],
-      stops: const [0.0, 0.5, 1.0],
-    );
-
-    // Draw background
-    final paint = Paint()..shader = gradient.createShader(rect);
-    canvas.drawRect(rect, paint);
-
-    // Draw animated circles
-    final circlePaint = Paint()
-      ..color = Colors.white.withOpacity(0.1)
+    final paint = Paint()
+      ..color = Colors.blue.withOpacity(0.3)
       ..style = PaintingStyle.fill;
 
-    // Draw multiple circles with different positions and sizes
-    for (int i = 0; i < 5; i++) {
-      final offset = 0.2 * i;
-      final radius = size.width *
-          (0.2 + 0.1 * math.sin(animation.value * math.pi * 2 + i));
-      final x = size.width *
-          (0.2 + 0.6 * math.sin(animation.value * math.pi * 2 + offset));
-      final y = size.height *
-          (0.2 + 0.6 * math.cos(animation.value * math.pi * 2 + offset));
+    final path = Path()
+      ..moveTo(0, size.height)
+      ..quadraticBezierTo(
+        size.width / 2,
+        size.height - 100,
+        size.width,
+        size.height,
+      );
 
-      canvas.drawCircle(Offset(x, y), radius, circlePaint);
-    }
+    canvas.drawPath(path, paint);
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
